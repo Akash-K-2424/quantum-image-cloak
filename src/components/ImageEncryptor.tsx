@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -73,23 +72,20 @@ const ImageEncryptor = () => {
 
     setIsEncrypting(true);
     try {
-      // Simulate encryption with a delay
-      setTimeout(() => {
-        const encrypted = encryptImage(originalImage, encryptionKey);
-        setEncryptedImage(encrypted);
-        toast({
-          title: "Encryption Complete",
-          description: "Image successfully encrypted with quantum key",
-        });
-        setActiveTab('encrypted');
-        setIsEncrypting(false);
-      }, 2000);
+      const encrypted = await encryptImage(originalImage, encryptionKey);
+      setEncryptedImage(encrypted);
+      toast({
+        title: "Encryption Complete",
+        description: "Image successfully encrypted with quantum key",
+      });
+      setActiveTab('encrypted');
     } catch (error) {
       toast({
         title: "Encryption failed",
         description: "Error during image encryption",
         variant: "destructive"
       });
+    } finally {
       setIsEncrypting(false);
     }
   };
@@ -106,23 +102,20 @@ const ImageEncryptor = () => {
 
     setIsDecrypting(true);
     try {
-      // Simulate decryption with a delay
-      setTimeout(() => {
-        const decrypted = decryptImage(encryptedImage, encryptionKey);
-        setDecryptedImage(decrypted);
-        toast({
-          title: "Decryption Complete",
-          description: "Image successfully decrypted with quantum key",
-        });
-        setActiveTab('decrypted');
-        setIsDecrypting(false);
-      }, 2000);
+      const decrypted = await decryptImage(encryptedImage, encryptionKey);
+      setDecryptedImage(decrypted);
+      toast({
+        title: "Decryption Complete",
+        description: "Image successfully decrypted with quantum key",
+      });
+      setActiveTab('decrypted');
     } catch (error) {
       toast({
         title: "Decryption failed",
         description: "Error during image decryption",
         variant: "destructive"
       });
+    } finally {
       setIsDecrypting(false);
     }
   };

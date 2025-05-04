@@ -1,3 +1,4 @@
+
 /**
  * Encrypts an image using the provided key
  * This is a simulated implementation that actually applies a visual effect
@@ -7,7 +8,7 @@
  * @param key - The encryption key
  * @returns The "encrypted" image as a data URL
  */
-export function encryptImage(imageData: string, key: string): string {
+export function encryptImage(imageData: string, key: string): Promise<string> {
   // For demonstration purposes, we'll create a pixelated/scrambled effect
   // In a real application, you would use AES or another strong algorithm
   
@@ -84,7 +85,7 @@ export function encryptImage(imageData: string, key: string): string {
  * @param key - The encryption key
  * @returns The "decrypted" image as a data URL
  */
-export function decryptImage(encryptedImageData: string, key: string): string {
+export function decryptImage(encryptedImageData: string, key: string): Promise<string> {
   // In a real application, this would use the inverse of your encryption algorithm
   // For our demo, we'll return the original image with slight modifications
   // to simulate a decryption process
