@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,18 +19,25 @@ const ImageEncryptor = () => {
   const [isGeneratingKey, setIsGeneratingKey] = useState(false);
   const [isEncrypting, setIsEncrypting] = useState(false);
   const [isDecrypting, setIsDecrypting] = useState(false);
-  const [activeTab, setActiveTab] = useState('original');
+  const [activeTab, setActiveTab] = useState('encrypt');
+  const [workflowMode, setWorkflowMode] = useState<'encrypt' | 'decrypt'>('encrypt');
 
   const handleImageUpload = (imageData: string) => {
-    setOriginalImage(imageData);
-    setEncryptedImage(null);
-    setDecryptedImage(null);
+    if (workflowMode === 'encrypt') {
+      setOriginalImage(imageData);
+      setEncryptedImage(null);
+      setActiveTab('encrypt');
+    } else {
+      setEncryptedImage(imageData);
+      setDecryptedImage(null);
+      setActiveTab('decrypt');
+    }
     setEncryptionKey(null);
-    setActiveTab('original');
   };
 
   const handleGenerateKey = async () => {
-    if (!originalImage) {
+    if ((workflowMode === 'encrypt' && !originalImage) || 
+        (workflowMode === 'decrypt' && !encryptedImage)) {
       toast({
         title: "No image selected",
         description: "Please upload an image first",
@@ -78,7 +86,7 @@ const ImageEncryptor = () => {
         title: "Encryption Complete",
         description: "Image successfully encrypted with quantum key",
       });
-      setActiveTab('encrypted');
+      setActiveTab('encrypt-result');
     } catch (error) {
       toast({
         title: "Encryption failed",
@@ -94,7 +102,7 @@ const ImageEncryptor = () => {
     if (!encryptedImage || !encryptionKey) {
       toast({
         title: "Cannot decrypt",
-        description: "Please encrypt an image first",
+        description: "Please upload an encrypted image and enter the correct key",
         variant: "destructive"
       });
       return;
@@ -108,7 +116,7 @@ const ImageEncryptor = () => {
         title: "Decryption Complete",
         description: "Image successfully decrypted with quantum key",
       });
-      setActiveTab('decrypted');
+      setActiveTab('decrypt-result');
     } catch (error) {
       toast({
         title: "Decryption failed",
@@ -137,6 +145,14 @@ const ImageEncryptor = () => {
     });
   };
 
+  const resetWorkflow = () => {
+    setOriginalImage(null);
+    setEncryptedImage(null);
+    setDecryptedImage(null);
+    setEncryptionKey(null);
+    setActiveTab(workflowMode === 'encrypt' ? 'encrypt' : 'decrypt');
+  };
+
   return (
     <Card className="bg-quantum-darker border-quantum-blue/30 quantum-glow overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-quantum-blue/20 to-transparent border-b border-quantum-blue/30">
@@ -144,135 +160,211 @@ const ImageEncryptor = () => {
         <CardDescription>
           Upload, encrypt, and decrypt images using quantum-secured keys
         </CardDescription>
+        
+        <div className="mt-4">
+          <Tabs value={workflowMode} onValueChange={(value) => setWorkflowMode(value as 'encrypt' | 'decrypt')}>
+            <TabsList className="bg-quantum-dark border border-quantum-blue/30 w-full grid grid-cols-2">
+              <TabsTrigger value="encrypt" className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
+                <Lock className="mr-2 h-4 w-4" />
+                I want to encrypt an image
+              </TabsTrigger>
+              <TabsTrigger value="decrypt" className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
+                <Unlock className="mr-2 h-4 w-4" />
+                I want to decrypt an image
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
-        {!originalImage ? (
-          <ImageUploader onImageUpload={handleImageUpload} />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-              <div className="col-span-1 space-y-4">
-                <StatusIndicator 
-                  label="Quantum Key"
-                  status={encryptionKey ? 'success' : 'pending'}
-                  detail={encryptionKey ? "Generated" : "Not generated"}
-                  icon={<Shield className="h-5 w-5" />}
-                  isLoading={isGeneratingKey}
-                />
-                <StatusIndicator 
-                  label="Encryption"
-                  status={encryptedImage ? 'success' : 'pending'}
-                  detail={encryptedImage ? "Complete" : "Not started"}
-                  icon={<Lock className="h-5 w-5" />}
-                  isLoading={isEncrypting}
-                />
-                <StatusIndicator 
-                  label="Decryption"
-                  status={decryptedImage ? 'success' : 'pending'}
-                  detail={decryptedImage ? "Complete" : "Not started"}
-                  icon={<Unlock className="h-5 w-5" />}
-                  isLoading={isDecrypting}
-                />
-                
-                <div className="space-y-2 pt-4">
-                  <Button
-                    variant="outline"
-                    className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
-                    onClick={handleGenerateKey}
-                    disabled={isGeneratingKey || !originalImage}
-                  >
-                    <Shield className="mr-2 h-4 w-4" />
-                    {isGeneratingKey ? 'Generating Key...' : 'Generate Quantum Key'}
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
-                    onClick={handleEncrypt}
-                    disabled={isEncrypting || !encryptionKey || !originalImage}
-                  >
-                    <Lock className="mr-2 h-4 w-4" />
-                    {isEncrypting ? 'Encrypting...' : 'Encrypt'}
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
-                    onClick={handleDecrypt}
-                    disabled={isDecrypting || !encryptedImage}
-                  >
-                    <Unlock className="mr-2 h-4 w-4" />
-                    {isDecrypting ? 'Decrypting...' : 'Decrypt'}
-                  </Button>
-                </div>
+        {workflowMode === 'encrypt' && !originalImage && (
+          <div className="text-center">
+            <h3 className="text-lg font-medium text-quantum-blue mb-2">Encrypt a New Image</h3>
+            <p className="text-quantum-light/70 mb-4">Upload an image to secure it with quantum encryption</p>
+            <ImageUploader onImageUpload={handleImageUpload} />
+          </div>
+        )}
+        
+        {workflowMode === 'decrypt' && !encryptedImage && (
+          <div className="text-center">
+            <h3 className="text-lg font-medium text-quantum-blue mb-2">Decrypt an Encrypted Image</h3>
+            <p className="text-quantum-light/70 mb-4">Upload an encrypted image and enter the secret key to reveal the original</p>
+            <ImageUploader onImageUpload={handleImageUpload} />
+          </div>
+        )}
+
+        {workflowMode === 'encrypt' && originalImage && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <div className="col-span-1 space-y-4">
+              <StatusIndicator 
+                label="Original Image"
+                status="success"
+                detail="Uploaded"
+                icon={<Upload className="h-5 w-5" />}
+              />
+              <StatusIndicator 
+                label="Quantum Key"
+                status={encryptionKey ? 'success' : 'pending'}
+                detail={encryptionKey ? "Generated" : "Not generated"}
+                icon={<Shield className="h-5 w-5" />}
+                isLoading={isGeneratingKey}
+              />
+              <StatusIndicator 
+                label="Encryption"
+                status={encryptedImage ? 'success' : 'pending'}
+                detail={encryptedImage ? "Complete" : "Not started"}
+                icon={<Lock className="h-5 w-5" />}
+                isLoading={isEncrypting}
+              />
+              
+              <div className="space-y-2 pt-4">
+                <Button
+                  variant="outline"
+                  className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
+                  onClick={handleGenerateKey}
+                  disabled={isGeneratingKey || !originalImage}
+                >
+                  <Shield className="mr-2 h-4 w-4" />
+                  {isGeneratingKey ? 'Generating Key...' : 'Generate Quantum Key'}
+                </Button>
               </div>
               
-              <div className="col-span-2">
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="bg-quantum-dark border border-quantum-blue/30 mb-4 w-full grid grid-cols-3">
-                    <TabsTrigger value="original" className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
-                      Original
-                    </TabsTrigger>
-                    <TabsTrigger value="encrypted" disabled={!encryptedImage} className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
-                      Encrypted
-                    </TabsTrigger>
-                    <TabsTrigger value="decrypted" disabled={!decryptedImage} className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
-                      Decrypted
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="original" className="mt-0">
-                    <ImageDisplay imageData={originalImage} label="Original Image" />
-                  </TabsContent>
-                  
-                  <TabsContent value="encrypted" className="mt-0">
-                    <div className="relative">
-                      <ImageDisplay imageData={encryptedImage} label="Encrypted Image" />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="absolute top-2 right-2 bg-quantum-dark/60 hover:bg-quantum-blue/80"
-                        onClick={() => handleDownload('encrypted')}
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        Download
-                      </Button>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="decrypted" className="mt-0">
-                    <div className="relative">
-                      <ImageDisplay imageData={decryptedImage} label="Decrypted Image" />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="absolute top-2 right-2 bg-quantum-dark/60 hover:bg-quantum-blue/80"
-                        onClick={() => handleDownload('decrypted')}
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        Download
-                      </Button>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+              <div>
+                <Button
+                  variant="outline"
+                  className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
+                  onClick={handleEncrypt}
+                  disabled={isEncrypting || !encryptionKey || !originalImage}
+                >
+                  <Lock className="mr-2 h-4 w-4" />
+                  {isEncrypting ? 'Encrypting...' : 'Encrypt Image'}
+                </Button>
               </div>
             </div>
-          </>
+            
+            <div className="col-span-2">
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="bg-quantum-dark border border-quantum-blue/30 mb-4 w-full grid grid-cols-2">
+                  <TabsTrigger value="encrypt" className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
+                    Original
+                  </TabsTrigger>
+                  <TabsTrigger value="encrypt-result" disabled={!encryptedImage} className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
+                    Encrypted Result
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="encrypt" className="mt-0">
+                  <ImageDisplay imageData={originalImage} label="Original Image" />
+                </TabsContent>
+                
+                <TabsContent value="encrypt-result" className="mt-0">
+                  <div className="relative">
+                    <ImageDisplay imageData={encryptedImage} label="Encrypted Image" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="absolute top-2 right-2 bg-quantum-dark/60 hover:bg-quantum-blue/80"
+                      onClick={() => handleDownload('encrypted')}
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Download
+                    </Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+        )}
+
+        {workflowMode === 'decrypt' && encryptedImage && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <div className="col-span-1 space-y-4">
+              <StatusIndicator 
+                label="Encrypted Image"
+                status="success"
+                detail="Uploaded"
+                icon={<Upload className="h-5 w-5" />}
+              />
+              <StatusIndicator 
+                label="Quantum Key"
+                status={encryptionKey ? 'success' : 'pending'}
+                detail={encryptionKey ? "Generated" : "Not entered"}
+                icon={<Shield className="h-5 w-5" />}
+                isLoading={isGeneratingKey}
+              />
+              <StatusIndicator 
+                label="Decryption"
+                status={decryptedImage ? 'success' : 'pending'}
+                detail={decryptedImage ? "Complete" : "Not started"}
+                icon={<Unlock className="h-5 w-5" />}
+                isLoading={isDecrypting}
+              />
+              
+              <div className="space-y-2 pt-4">
+                <Button
+                  variant="outline"
+                  className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
+                  onClick={handleGenerateKey}
+                  disabled={isGeneratingKey}
+                >
+                  <Shield className="mr-2 h-4 w-4" />
+                  Enter Quantum Key
+                </Button>
+              </div>
+              
+              <div>
+                <Button
+                  variant="outline"
+                  className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
+                  onClick={handleDecrypt}
+                  disabled={isDecrypting || !encryptionKey || !encryptedImage}
+                >
+                  <Unlock className="mr-2 h-4 w-4" />
+                  {isDecrypting ? 'Decrypting...' : 'Decrypt Image'}
+                </Button>
+              </div>
+            </div>
+            
+            <div className="col-span-2">
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="bg-quantum-dark border border-quantum-blue/30 mb-4 w-full grid grid-cols-2">
+                  <TabsTrigger value="decrypt" className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
+                    Encrypted
+                  </TabsTrigger>
+                  <TabsTrigger value="decrypt-result" disabled={!decryptedImage} className="data-[state=active]:bg-quantum-blue data-[state=active]:text-white">
+                    Decrypted Result
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="decrypt" className="mt-0">
+                  <ImageDisplay imageData={encryptedImage} label="Encrypted Image" />
+                </TabsContent>
+                
+                <TabsContent value="decrypt-result" className="mt-0">
+                  <div className="relative">
+                    <ImageDisplay imageData={decryptedImage} label="Decrypted Image" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="absolute top-2 right-2 bg-quantum-dark/60 hover:bg-quantum-blue/80"
+                      onClick={() => handleDownload('decrypted')}
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Download
+                    </Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
         )}
       </CardContent>
       
-      {originalImage && (
+      {(originalImage || encryptedImage) && (
         <CardFooter className="bg-quantum-darker border-t border-quantum-blue/30 justify-between">
           <Button
             variant="ghost"
-            onClick={() => {
-              setOriginalImage(null);
-              setEncryptedImage(null);
-              setDecryptedImage(null);
-              setEncryptionKey(null);
-            }}
+            onClick={resetWorkflow}
             className="text-quantum-light/70 hover:text-quantum-light"
           >
             Reset
