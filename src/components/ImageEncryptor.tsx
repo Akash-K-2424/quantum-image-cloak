@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, Lock, Shield, Download } from 'lucide-react';
+import { Upload, Lock, Unlock, Shield, Download } from 'lucide-react';
 import ImageUploader from './ImageUploader';
 import ImageDisplay from './ImageDisplay';
 import { generateQuantumKey } from '@/lib/quantum';
@@ -170,7 +170,7 @@ const ImageEncryptor = () => {
                   label="Decryption"
                   status={decryptedImage ? 'success' : 'pending'}
                   detail={decryptedImage ? "Complete" : "Not started"}
-                  icon={<Lock className="h-5 w-5" />}
+                  icon={<Unlock className="h-5 w-5" />}
                   isLoading={isDecrypting}
                 />
                 
@@ -184,7 +184,9 @@ const ImageEncryptor = () => {
                     <Shield className="mr-2 h-4 w-4" />
                     {isGeneratingKey ? 'Generating Key...' : 'Generate Quantum Key'}
                   </Button>
-                  
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2">
                   <Button
                     variant="outline"
                     className="w-full bg-quantum-darker border-quantum-blue/40 text-quantum-blue hover:bg-quantum-blue/20 hover:text-quantum-blue-light"
@@ -192,7 +194,7 @@ const ImageEncryptor = () => {
                     disabled={isEncrypting || !encryptionKey || !originalImage}
                   >
                     <Lock className="mr-2 h-4 w-4" />
-                    {isEncrypting ? 'Encrypting...' : 'Encrypt Image'}
+                    {isEncrypting ? 'Encrypting...' : 'Encrypt'}
                   </Button>
                   
                   <Button
@@ -201,8 +203,8 @@ const ImageEncryptor = () => {
                     onClick={handleDecrypt}
                     disabled={isDecrypting || !encryptedImage}
                   >
-                    <Lock className="mr-2 h-4 w-4" />
-                    {isDecrypting ? 'Decrypting...' : 'Decrypt Image'}
+                    <Unlock className="mr-2 h-4 w-4" />
+                    {isDecrypting ? 'Decrypting...' : 'Decrypt'}
                   </Button>
                 </div>
               </div>
