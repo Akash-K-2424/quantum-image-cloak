@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom quantum theme colors
+				quantum: {
+					dark: "#0a0e17",
+					darker: "#070b12",
+					light: "#f0f2f5",
+					blue: {
+						DEFAULT: "#00b8ff",
+						dark: "#0077ff",
+						light: "#5ccdff",
+					},
+					success: "#2ecc71",
+					danger: "#e74c3c",
 				}
 			},
 			borderRadius: {
@@ -84,11 +98,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'quantum-pulse': {
+					'0%, 100%': { opacity: '0.5' },
+					'50%': { opacity: '1' },
+				},
+				'quantum-float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'quantum-pulse': 'quantum-pulse 3s ease-in-out infinite',
+				'quantum-float': 'quantum-float 6s ease-in-out infinite',
 			}
 		}
 	},
