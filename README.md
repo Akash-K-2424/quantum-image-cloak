@@ -1,110 +1,98 @@
 # Quantum Image Cloak
 
-Quantum Image Cloak is a web-based application that demonstrates quantum-inspired encryption and decryption of images using a simulated BB84 protocol for key generation. This project is built with Vite, React, TypeScript, shadcn-ui, and Tailwind CSS.
+A beginner-friendly web app to encrypt and decrypt images using a simulated quantum key. No prior experience needed—just follow the steps below!
 
 ---
 
-## 🚀 Features
-
-- **Quantum Key Generation**: Simulates quantum key generation (BB84 protocol) for secure encryption.
-- **Image Encryption**: Encrypt any uploaded image using the generated quantum key.
-- **Image Decryption**: Decrypt encrypted images using the same quantum key.
-- **Download Support**: Download encrypted and decrypted images.
-- **Modern UI**: Clean, responsive interface with status indicators and workflow tabs.
+## 🌟 What is this?
+This project lets you upload an image, generate a quantum-inspired key, and encrypt or decrypt your image—all in your browser. It's a fun way to learn about quantum encryption concepts (no real quantum computer needed).
 
 ---
 
-## 🖼️ How It Works
+## 🖥️ How to Download and Run This Project
 
-1. **Encrypt Workflow**
-   - Upload an image.
-   - Generate a quantum key.
-   - Encrypt the image using the key.
-   - Download or view the encrypted image.
+### 1. Prerequisites
+- **Node.js** and **npm** must be installed on your computer.
+  - If you don't have them, install both easily with [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating).
 
-2. **Decrypt Workflow**
-   - Upload an encrypted image.
-   - Enter or generate the quantum key.
-   - Decrypt the image using the key.
-   - Download or view the decrypted image.
+### 2. Download the Code
+- Click the green **Code** button on the GitHub page and choose **Download ZIP**.
+- Or, if you use git, run this in your terminal:
+  ```zsh
+  git clone https://github.com/Akash-K-2424/quantum-image-cloak.git
+  cd quantum-image-cloak
+  ```
+
+### 3. Install Dependencies
+- In your terminal, run:
+  ```zsh
+  npm install
+  ```
+  This will download everything the project needs.
+
+### 4. Start the App
+- In your terminal, run:
+  ```zsh
+  npm run dev
+  ```
+- You will see a message like:
+  ```
+  VITE vX.X.X  ready in XXXX ms
+  ➜  Local:   http://localhost:8080/
+  ```
+- Open your browser and go to [http://localhost:8080](http://localhost:8080)
+
+---
+
+## 🕹️ How to Use the App
+1. **Encrypt an Image**
+   - Click "I want to encrypt an image"
+   - Upload your image
+   - Click "Generate Quantum Key"
+   - Click "Encrypt Image"
+   - Download your encrypted image
+
+2. **Decrypt an Image**
+   - Click "I want to decrypt an image"
+   - Upload your encrypted image
+   - Enter or generate the quantum key
+   - Click "Decrypt Image"
+   - Download your decrypted image
 
 ---
 
 ## 🛠️ Technologies Used
-
-- [Vite](https://vitejs.dev/)
-- [React](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [shadcn-ui](https://ui.shadcn.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
+- Vite (for fast development)
+- React (for the user interface)
+- TypeScript (for safer code)
+- shadcn-ui & Tailwind CSS (for beautiful styling)
 
 ---
 
-## 🏁 Getting Started
-
-### Prerequisites
-- Node.js & npm (recommended: use [nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
-
-### Installation
-
-```sh
-# 1. Clone the repository
- git clone <YOUR_GIT_URL>
-
-# 2. Navigate to the project directory
- cd quantum-image-cloak
-
-# 3. Install dependencies
- npm install
-
-# 4. Start the development server
- npm run dev
-```
-
-The app will be available at [http://localhost:8080](http://localhost:8080).
+## 📁 Project Structure (for the curious)
+- `src/components/` — UI building blocks
+- `src/lib/` — Encryption and key logic
+- `src/pages/` — Main pages
+- `public/` — Static files
 
 ---
 
-## 🧑‍💻 Project Structure
-
-- `src/components/` — UI components (encryption, decryption, uploader, display, status)
-- `src/lib/` — Core logic for encryption, decryption, and quantum key generation
-- `src/pages/` — Page components
-- `public/` — Static assets
-
----
-
-## 🧬 Quantum Encryption Model
-
-This project simulates quantum encryption using a BB84-inspired protocol for key generation. The encryption and decryption functions use this key to manipulate image data. No real quantum hardware or neural networks are involved—this is a conceptual and educational demo.
-
----
-
-## 🌐 Deployment
-
-You can deploy this project using any static hosting provider (e.g., Vercel, Netlify) or via the [Lovable](https://lovable.dev/) platform.
-
----
-
-## 📄 License
-
-This project is for educational and demonstration purposes.
-
----
-
-## 🙋 FAQ
-
-**Q: Can I use my own key for decryption?**
-A: Currently, the UI generates the key for you. You can modify the code to allow manual key entry if needed.
+## ❓ FAQ
+**Q: Do I need to know coding to use this?**
+A: No! Just follow the steps above.
 
 **Q: Is this real quantum encryption?**
-A: No, this is a simulation for educational purposes only.
+A: No, it's a simulation for learning and fun.
 
-**Q: Where is the encryption logic?**
-A: See `src/lib/encryption.ts` and `src/lib/quantum.ts` for the core logic.
+**Q: Can I use my own key?**
+A: The app generates a key for you, but you can modify the code to allow manual entry if you wish.
 
 ---
 
 ## 👤 Author
+- [Akash Kotha](https://github.com/Akash-K-2424)
 
-- [Your Name](https://github.com/yourusername)
+---
+
+## 📝 License
+This project is for educational and demonstration purposes only.
